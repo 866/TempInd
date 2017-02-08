@@ -17,6 +17,9 @@ func Temp() (res float64, err error) {
 		return
 	}
 	res, err = strconv.ParseFloat(strings.TrimSpace(string(rawTemp)), 64)
+	if err != nil {
+		return
+	}
 	res /= float64(1000)
 	return
 }
