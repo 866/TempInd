@@ -2,17 +2,19 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 
 	"tempind/read"
 
+	"github.com/mattn/go-gtk/gdk"
 	"github.com/mattn/go-gtk/glib"
 	"github.com/mattn/go-gtk/gtk"
-	"github.com/mattn/go-gtk/gdk"
 )
 
 // Continuously updates the label
 func updateTemp(label *gtk.Label, done <-chan struct{}) {
+	defer gtk.MainQuit()
 EndlessLoop:
 	for {
 		select {
@@ -34,14 +36,18 @@ EndlessLoop:
 }
 
 func main() {
+	runtime.GOMAXPROCS(10)
+	glib.ThreadInit(nil)
+	gdk.ThreadsInit()
+	gdk.ThreadsEnter()
 	gtk.Init(nil)
-	dialog := gtk.NewWindow(0)
+	dialog := gtk.NewWindow(gtk.WINDOW_TOPLEVEL)
 	dialog.SetTitle("Temperature Indicator")
 	dialog.SetSizeRequest(80, 60)
 	dialog.SetResizable(false)
 	done := make(chan struct{})
+	defer close(done)
 	dialog.Connect("destroy", func(ctx *glib.CallbackContext) {
-		close(done)
 		gtk.MainQuit()
 	}, "Quitting")
 	label := gtk.NewLabel("0 °C")
