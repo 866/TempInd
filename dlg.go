@@ -45,6 +45,7 @@ func main() {
 	dialog.SetTitle("Temperature Indicator")
 	dialog.SetSizeRequest(80, 60)
 	dialog.SetResizable(false)
+	dialog.SetKeepAbove(true)
 	done := make(chan struct{})
 	defer close(done)
 	dialog.Connect("destroy", func(ctx *glib.CallbackContext) {
