@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 	"time"
 
 	"github.com/866/TempInd/read"
@@ -35,24 +34,33 @@ EndlessLoop:
 }
 
 func main() {
-	runtime.GOMAXPROCS(10)
+	// Initialize threads
 	glib.ThreadInit(nil)
 	gdk.ThreadsInit()
 	gdk.ThreadsEnter()
 	gtk.Init(nil)
+
+	// Launch a new window
 	dialog := gtk.NewWindow(gtk.WINDOW_TOPLEVEL)
 	dialog.SetTitle("Temperature Indicator")
 	dialog.SetSizeRequest(80, 60)
 	dialog.SetResizable(false)
 	dialog.SetKeepAbove(true)
+	dialog.SetSkipTaskbarHint(true)	
 	done := make(chan struct{})
+
+	// Allow the windows to be closed
 	defer close(done)
 	dialog.Connect("destroy", func(ctx *glib.CallbackContext) {
 		gtk.MainQuit()
 	}, "Quitting")
+
+	// Add label that is updated by goroutine
 	label := gtk.NewLabel("0 °C")
 	go updateTemp(label, done)
 	dialog.Add(label)
 	dialog.ShowAll()
+
+	// Run main gtk gui loop
 	gtk.Main()
 }
