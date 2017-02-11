@@ -41,25 +41,26 @@ func main() {
 	gtk.Init(nil)
 
 	// Launch a new window
-	dialog := gtk.NewWindow(gtk.WINDOW_TOPLEVEL)
-	dialog.SetTitle("Temperature Indicator")
-	dialog.SetSizeRequest(80, 60)
-	dialog.SetResizable(false)
-	dialog.SetKeepAbove(true)
-	dialog.SetSkipTaskbarHint(true)	
+	window := gtk.NewWindow(gtk.WINDOW_TOPLEVEL)
+	window.SetTitle("Temperature Indicator")
+	window.SetSizeRequest(80, 60)
+	window.SetResizable(false)
+	window.SetKeepAbove(true)
+	window.SetSkipTaskbarHint(true)
+	fmt.Println(window.GetSkipTaskbarHint())
 	done := make(chan struct{})
 
 	// Allow the windows to be closed
 	defer close(done)
-	dialog.Connect("destroy", func(ctx *glib.CallbackContext) {
+	window.Connect("destroy", func(ctx *glib.CallbackContext) {
 		gtk.MainQuit()
 	}, "Quitting")
 
 	// Add label that is updated by goroutine
 	label := gtk.NewLabel("0 °C")
 	go updateTemp(label, done)
-	dialog.Add(label)
-	dialog.ShowAll()
+	window.Add(label)
+	window.ShowAll()
 
 	// Run main gtk gui loop
 	gtk.Main()
