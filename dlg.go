@@ -47,7 +47,6 @@ func main() {
 	window.SetResizable(false)
 	window.SetKeepAbove(true)
 	window.SetSkipTaskbarHint(true)
-	fmt.Println(window.GetSkipTaskbarHint())
 	done := make(chan struct{})
 
 	// Allow the windows to be closed
