@@ -1,2 +1,2 @@
 # TempInd
-Temperature indicator for the raspbian PIXEL in golang
+Temperature indicator for my raspbian PIXEL coded in golang using go-gtk
