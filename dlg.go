@@ -49,7 +49,7 @@ func main() {
 	window.SetSkipTaskbarHint(true)
 	done := make(chan struct{})
 
-	// Allow the windows to be closed
+	// Allow the window to be closed
 	defer close(done)
 	window.Connect("destroy", func(ctx *glib.CallbackContext) {
 		gtk.MainQuit()
