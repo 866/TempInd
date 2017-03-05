@@ -1,4 +1,7 @@
 language: go
-script: go test ./read
+script: 
+    - go get github.com/alecthomas/gometalinter
+    - gometalinter --install
+    - gometalinter ./...
 notifications:
     email: false
